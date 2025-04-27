@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button'
 import Sidebar from './components/Sidebar'
 import TaskItem from './components/TaskItem'
 import Divider from '@/components/custom/Divider'
-import TaskList from './components/TaskList'
 import { Status } from './components/type'
 
 const Board = () => {

@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import TaskItem from "./TaskItem"
 import { Status, TaskDataItem } from "./type"
 
@@ -8,9 +9,10 @@ interface TaskListProps {
 
 
 const TaskList = ({status, list} : TaskListProps) => {
+  useEffect(() => console.log(list))
   return (
     <div className="p-5 border-1 shadow-sm">
-      <header></header>
+      <header>{status}</header>
       <TaskItem status={Status.Todo} title='Title' details='details' />
     </div>
   )
