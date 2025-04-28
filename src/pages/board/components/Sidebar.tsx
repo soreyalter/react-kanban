@@ -3,9 +3,9 @@ import { Plus } from 'lucide-react'
 
 const Sidebar = () => {
   return (
-    <aside className="group bg-secondary relative flex h-screen w-80 flex-col items-center gap-y-4">
+    <aside className="group bg-secondary fixed flex h-full w-80 flex-col items-center gap-y-4">
       <h1 className="mt-4 text-4xl font-bold">Task Kanban</h1>
-      <Button variant="outline" className="text-lg hover:text-green-500 w-40">
+      <Button variant="outline" className="w-40 text-lg hover:text-lime-400">
         <Plus />
         New Task
       </Button>

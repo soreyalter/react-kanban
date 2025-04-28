@@ -5,6 +5,7 @@ export enum Status {
 }
 
 export interface TaskDataItem {
+  id?: number
   status: Status
   title: string
   details: string

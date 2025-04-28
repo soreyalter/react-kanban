@@ -122,3 +122,21 @@
 * {
   font-family: "Playfair Display", HarmonyOS Sans SC, serif;
 }
+
+html, body, #root {
+  height: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 4px;          /* 垂直滚动条宽度 */
+  height: 8px;         /* 水平滚动条高度 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;    /* 滑块颜色 */
+  border-radius: 4px;  /* 圆角 */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;    /* 悬停时颜色 */
+}

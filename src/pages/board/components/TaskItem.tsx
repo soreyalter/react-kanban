@@ -10,13 +10,19 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { Status, TaskDataItem } from './type'
 
-const getIcon = (status: Status) => {
-  if (status === Status.Todo) return <LoaderCircle className="text-amber-400" />
-  if (status === Status.Completed) return <Circle />
-  return <CircleCheck />
+interface TaskItemProps extends TaskDataItem {
+  className?: string
+  onDragStart?: (e: React.DragEvent) => void
+  onDragEnd?: (e: React.DragEvent) => void
 }
 
-const TaskItem = ({ details, status, title }: TaskDataItem) => {
+const getIcon = (status: Status) => {
+  if (status === Status.Todo) return <LoaderCircle className="text-red-400" />
+  if (status === Status.Processing) return <Circle className='text-amber-400' />
+  return <CircleCheck className='text-green-400' />
+}
+
+const TaskItem = ({ details, status, title, className, onDragEnd, onDragStart }: TaskItemProps) => {
   const [isOverLines, setIsOverLines] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -36,7 +42,15 @@ const TaskItem = ({ details, status, title }: TaskDataItem) => {
   }
 
   return (
-    <div className="group flex min-h-10 w-70 flex-col justify-center gap-y-2 rounded-md border-1 border-[text-muted-foreground] p-4 transition duration-300 hover:bg-slate-100">
+    <div
+      draggable="true"
+      className={clsx(
+        'group flex flex-col justify-center gap-y-2 rounded-md border-1 border-[text-muted-foreground] p-4 transition duration-300 hover:bg-slate-100',
+        className,
+      )}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+    >
       <header className="flex items-center text-lg font-bold">
         {icon}
         <div className="ml-2 flex flex-1 items-center justify-between">
@@ -48,9 +62,9 @@ const TaskItem = ({ details, status, title }: TaskDataItem) => {
               className="hidden h-6 w-6 group-hover:inline-flex hover:bg-white"
             >
               {isCollapsed ? (
-                <ChevronDown className="text-amber-400" />
+                <ChevronDown />
               ) : (
-                <ChevronRight className="text-amber-400" />
+                <ChevronRight />
               )}
             </Button>
           )}
@@ -60,12 +74,12 @@ const TaskItem = ({ details, status, title }: TaskDataItem) => {
       <div
         ref={contentRef}
         className={clsx(
-          'line-clamp-2 text-[16px] leading-6 transition-all ease-in-out duration-300',
+          'line-clamp-2 text-[16px] leading-6 transition-all duration-300 ease-in-out',
           isCollapsed && 'line-clamp-none',
         )}
       >
-        {details}:
-        苏州移动公司的线上宣讲会将在4.28晚18：00开始，欢迎感兴趣的同学届时参与，还有抽奖环节～
+        {details}
+        
       </div>
     </div>
   )
