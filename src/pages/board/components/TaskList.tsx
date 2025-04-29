@@ -3,13 +3,15 @@ import TaskItem from './TaskItem'
 import { Status, TaskDataItem } from './type'
 import clsx from 'clsx'
 import { status2title } from '@/const/taskListConfig'
+import { useAppDispatch, useAppSelector } from '@/hooks/common'
+import { updateCompletedTasks, updateProcessingTasks, updateTodoTasks } from '@/store/slices/taskSlice'
 
 interface TaskListProps {
   status: Status
-  list?: TaskDataItem[]
+  list: TaskDataItem[]
   className?: string
   onDrop?: (event: React.DragEvent<HTMLDivElement>, status: Status) => void
-  updateTasks: (prevStatus: Status, newStatus: Status, deleteIndex: number) => void
+  updateTasks: (x: TaskDataItem[]) => void
 }
 
 interface DragSourceConfig {
@@ -50,6 +52,8 @@ const handleDragOver: React.DragEventHandler<HTMLDivElement> = (event) => {
 
 const TaskList = ({ status, list, className, updateTasks }: TaskListProps) => {
   const header = status2title[status]
+  const dispatch = useAppDispatch()
+  const {completedTasks, processingTasks, todoTasks} = useAppSelector(state => state.task)
 
   const handleDrop = (
     event: React.DragEvent<HTMLDivElement>,
@@ -62,9 +66,25 @@ const TaskList = ({ status, list, className, updateTasks }: TaskListProps) => {
       event.dataTransfer.getData('text/plain'),
     )
     console.log(sourceConfig)
+    let transferTask: TaskDataItem
+
     // 移动到其他区域才更新tasks数组
     if (sourceConfig.status !== status) {
-      updateTasks(sourceConfig.status, status, sourceConfig.itemIndex)
+      if (sourceConfig.status === Status.Todo) {
+        const copy = todoTasks.slice()
+        transferTask = copy.splice(sourceConfig.itemIndex, 1)[0]
+        dispatch(updateTodoTasks(copy))
+      } else if(sourceConfig.status === Status.Processing) {
+        const copy = processingTasks.slice()
+        transferTask = copy.splice(sourceConfig.itemIndex, 1)[0]
+        dispatch(updateProcessingTasks(copy))
+      } else {
+        const copy = completedTasks.slice()
+        transferTask = copy.splice(sourceConfig.itemIndex, 1)[0]
+        dispatch(updateCompletedTasks(copy))
+      }
+      console.log(transferTask)
+      updateTasks([...list, {...transferTask, status}])
     }
   }
   return (
