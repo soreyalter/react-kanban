@@ -18,21 +18,35 @@ interface TaskItemProps extends TaskDataItem {
 
 const getIcon = (status: Status) => {
   if (status === Status.Todo) return <LoaderCircle className="text-red-400" />
-  if (status === Status.Processing) return <Circle className='text-amber-400' />
-  return <CircleCheck className='text-green-400' />
+  if (status === Status.Processing) return <Circle className="text-amber-400" />
+  return <CircleCheck className="text-green-400" />
 }
 
-const TaskItem = ({ details, status, title, className, onDragEnd, onDragStart }: TaskItemProps) => {
+const TaskItem = ({
+  details,
+  status,
+  title,
+  className,
+  onDragEnd,
+  onDragStart,
+}: TaskItemProps) => {
   const [isOverLines, setIsOverLines] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
   const [isCollapsed, setIsCollapsed] = useState(false)
   const icon = getIcon(status)
 
-  // line-height = 24px，超过两行的卡片才有 icon 展开按钮
   useEffect(() => {
-    if (contentRef.current && contentRef.current.scrollHeight > 48) {
-      setIsOverLines(true)
+    // line-height = 24px，超过两行的卡片才有 icon 展开按钮
+    function handleResize () {
+      if (contentRef.current && contentRef.current.scrollHeight > 48) {
+        setIsOverLines(true)
+      } else {
+        setIsOverLines(false)
+      }
     }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   // click 展开 button
@@ -61,11 +75,7 @@ const TaskItem = ({ details, status, title, className, onDragEnd, onDragStart }:
               variant="ghost"
               className="hidden h-6 w-6 group-hover:inline-flex hover:bg-white"
             >
-              {isCollapsed ? (
-                <ChevronDown />
-              ) : (
-                <ChevronRight />
-              )}
+              {isCollapsed ? <ChevronDown /> : <ChevronRight />}
             </Button>
           )}
         </div>
@@ -79,7 +89,6 @@ const TaskItem = ({ details, status, title, className, onDragEnd, onDragStart }:
         )}
       >
         {details}
-        
       </div>
     </div>
   )

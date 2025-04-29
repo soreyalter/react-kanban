@@ -89,7 +89,7 @@ const TaskList = ({ status, list, className, updateTasks }: TaskListProps) => {
   }
   return (
     <div
-      className={clsx('border-1 p-5 shadow-sm', className)}
+      className={clsx('border-1 p-5 shadow-sm min-w-80 overflow-x-auto', className)}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
